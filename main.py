@@ -14,16 +14,17 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
 
         if last_input == 1:
             name = input("Name:")
-            ID = input("ID:")
+            age = int(input("Age:"))
+            ID = int(input("ID:"))
             city = input("City:")
-            branchcodes = input("Branch(es):")
+            branchcodes = (input("Branch(es):")).split(",")
             # How will you conver this to a list, given that
             # the user will always enter a comma separated list of branch codes?
             # eg>   2,5
-
+            position = input("Position: ")
             salary = input("Salary: ")
             # Create a new Engineer with given details.
-            engineer = None # Change this
+            engineer = Engineer(name, age, ID, city, branchcodes, position, salary) # Change this
 
             engineer_roster.append(engineer) # Add him to the list! See people.py for definiton
             
