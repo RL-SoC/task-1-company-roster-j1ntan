@@ -30,6 +30,8 @@ class Employee:
         self.age = age 
         self.ID = ID
         self.city = city
+        for branch in branchcodes:
+            assert branchmap[int(branch)]["city"] == city , "Branchcode does not maps to city." 
         self.branches = branchcodes
         if salary is not None: self.salary = salary
         else: self.salary = 10_000 
@@ -66,7 +68,7 @@ class Engineer(Employee):
     position : str # Position in organization Hierarchy
 
     def __init__(self, name, age, ID, city,\
-                 branchcodes, position= "Junior", salary = None):
+                 branchcodes, position = "Junior", salary = None):
         # Call the parent's constructor
         super().__init__(name, age, ID, city, branchcodes, salary)
         
@@ -94,8 +96,8 @@ class Engineer(Employee):
         else:
             return False
         
-    def __repr__(self) -> str:
-        return f"[{self.name}, {self.age}, {self.ID}, {self.city}, {self.branches}, {self.position}, {self.salary}]"
+    # def __repr__(self) -> str:
+    #     return f"[{self.name}, {self.age}, {self.ID}, {self.city}, {self.branches}, {self.position}, {self.salary}]"
 
 
 
@@ -114,9 +116,11 @@ class Salesman(Employee):
     # An extra member variable!
     superior : int # EMPLOYEE ID of the superior this guy reports to
 
+    pos_dict = {"Head": 2 , "Manager" : 1 , "Rep" : 0}
+
     def __init__(self, name, age, ID, city,\
                  branchcodes, position= "Rep", salary = None, superior = None): # Complete all this! Add arguments
-        super.__init__(name, age, ID, city, branchcodes, salary)
+        super().__init__(name, age, ID, city, branchcodes, salary)
 
         assert position in ["Rep", "Manager", "Head"] , "Position entered is not valid."
         self.position = position
@@ -126,9 +130,7 @@ class Salesman(Employee):
     
     # def promote
     def promote(self, position:str) -> bool:
-        pos_dict = {"Head": 2 , "Manager" : 1 , "Rep" : 0}
-
-        if pos_dict[position] > pos_dict[self.position]:
+        if Salesman.pos_dict[position] > Salesman.pos_dict[self.position]:
             self.position = position
             self.increment(self.salary * 0.3)
             return True
@@ -146,36 +148,30 @@ class Salesman(Employee):
             return (None, None)
         else:
             for employee in sales_roster:
-                if employee[2] == self.superior:
-                    return (self.superior, employee[0])
+                if employee.ID == self.superior:
+                    return (self.superior, employee.name)
             return (None, None)
 
-    def add_superior(self) -> bool:
+    def add_superior(self, id) -> bool:
         # Add superior of immediately higher rank.
         # If superior doesn't exist return false,
 
         #assert self.superior is None, "Superior ID already provided."
-        
-        if self.position == "Head":
-            return False
-        else:
-            for employee in sales_roster:
-                if self.position == "Rep":
-                    if employee[5] == "Manager":
-                        self.superior = employee[2]
-                        return True
-                else:
-                    if employee[5] == "Head":
-                        self.superior = employee[2]
-                        return True
-            return False
 
+        for employee in sales_roster:
+            if employee.ID == id:
+                if Salesman.pos_dict[employee.position] > Salesman.pos_dict[self.position]:
+                    self.superior = id
+                    return True
+        return False
 
     def migrate_branch(self, new_code: int) -> bool:
         # This should simply add a branch to the list; even different cities are fine
         self.branches.append(new_code)
         return True
 
+    # def __repr__(self) -> str:
+    #     return f"[{self.name}, {self.age}, {self.ID}, {self.city}, {self.branches}, {self.position}, {self.salary}, {self.superior}]"
     
 
 
