@@ -113,9 +113,11 @@ if __name__ == "__main__":  # Equivalent to int main() {} in C++.
                 if employee.ID == int(ID):
                     found_employee = employee
                     break
-            if not found_employee: print("No such employee")
-            else:
-                found_employee.migrate_branch(new_branch)    
+            try:
+                found_employee.migrate_branch(new_branch)
+            except:
+                print("No such employee")
+                    
             #### NO IF ELSE ZONE ENDS #################################################
 
         elif last_input == 5:
